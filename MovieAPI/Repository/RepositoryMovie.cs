@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
+using MovieAPI.Dto;
 using MovieAPI.Models;
 using MovieAPI.Repository.interfaces;
 using System;
@@ -49,6 +50,48 @@ namespace MovieAPI.Repository
             }
 
             return null;
+        }
+
+
+        public async Task<Movie> Create(CreateRequest request)
+        {
+
+            var movie = _mapper.Map<Movie>(request);
+
+            _context.Movie.Add(movie);
+
+            await _context.SaveChangesAsync();
+
+            return movie;
+
+        }
+
+        public async Task<Movie> Update(int id, UpdateRequest request)
+        {
+
+            var movie = await _context.Movie.FindAsync(id);
+
+            movie.Title = request.Title ?? movie.Title;
+            movie.Gender = request.Gender ?? movie.Gender;
+            movie.date = request.Date ?? movie.date;
+
+            _context.Movie.Update(movie);
+
+            await _context.SaveChangesAsync();
+
+            return movie;
+
+        }
+
+        public async Task<Movie> DeleteById(int id)
+        {
+            var movie = await _context.Movie.FindAsync(id);
+
+            _context.Movie.Remove(movie);
+
+            await _context.SaveChangesAsync();
+
+            return movie;
         }
 
 
