@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
 using MovieAPI.Models;
 using MovieAPI.Repository.interfaces;
+using System;
 
 namespace MovieAPI.Repository
 {
@@ -22,5 +23,34 @@ namespace MovieAPI.Repository
         {
             return await _context.Movie.ToListAsync();
         }
+
+        public async Task<Movie> GetByIdAsync(int id)
+        {
+            List<Movie> all = await _context.Movie.ToListAsync();
+
+            for (int i = 0; i < all.Count; i++)
+            {
+                if (all[i].Id == id) return all[i];
+            }
+
+            return null;
+        }
+
+        public async Task<Movie> GetByNameAsync(string name)
+        {
+            List<Movie> all = await _context.Movie.ToListAsync();
+
+            for (int i = 0; i < all.Count; i++)
+            {
+                if (all[i].Title.Equals(name))
+                {
+                    return all[i];
+                }
+            }
+
+            return null;
+        }
+
+
     }
 }

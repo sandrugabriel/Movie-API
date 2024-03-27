@@ -26,6 +26,51 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "FindById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7237/findById?id=2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"findById"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindByName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7237/find/Spider-man%203",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"find",
+						"Spider-man%203"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
