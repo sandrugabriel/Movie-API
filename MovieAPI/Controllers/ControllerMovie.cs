@@ -1,71 +1,115 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using MovieAPI.Controllers.interfaces;
 using MovieAPI.Dto;
+using MovieAPI.Exceptions;
 using MovieAPI.Models;
 using MovieAPI.Repository.interfaces;
+using MovieAPI.Service.interfaces;
 using System;
 
 namespace MovieAPI.Controllers
 {
-    [ApiController]
-    [Route("api/v1/movie")]
-    public class ControllerMovie : ControllerBase
+    public class ControllerMovie : ControllerAPI
     {
 
-        private readonly ILogger<ControllerMovie> _logger;
+        private IQueryService _queryService;
+        private ICommandService _commandService;
 
-        private IRepository _repository;
-
-        public ControllerMovie(ILogger<ControllerMovie> logger, IRepository repository)
+        public ControllerMovie(IQueryService queryService, ICommandService commandService)
         {
-            _logger = logger;
-            _repository = repository;
+            _queryService = queryService;
+            _commandService = commandService;
         }
 
-        [HttpGet("")]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetAll()
+        public override async Task<ActionResult<List<Movie>>> GetAll()
         {
-            var products = await _repository.GetAllAsync();
-            return Ok(products);
+            try
+            {
+                var eventss = await _queryService.GetAll();
+
+                return Ok(eventss);
+
+            }
+            catch (ItemsDoNotExist ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-
-        [HttpGet("/findById")]
-        public async Task<ActionResult<Movie>> GetById([FromQuery] int id)
+        public override async Task<ActionResult<Movie>> GetByName([FromQuery] string name)
         {
-            var movie = await _repository.GetByIdAsync(id);
-            return Ok(movie);
-        }
 
-
-        [HttpGet("/find/{name}")]
-        public async Task<ActionResult<Movie>> GetByNameRoute([FromRoute] string name)
-        {
-            var movie = await _repository.GetByNameAsync(name);
-            return Ok(movie);
-        }
-
-
-        [HttpPost("/create")]
-        public async Task<ActionResult<Movie>> Create([FromBody] CreateRequest request)
-        {
-            var movie = await _repository.Create(request);
-            return Ok(movie);
+            try
+            {
+                var events = await _queryService.GetByNameAsync(name);
+                return Ok(events);
+            }
+            catch (ItemDoesNotExist ex)
+            {
+                return NotFound(ex.Message);
+            }
 
         }
 
-        [HttpPut("/update")]
-        public async Task<ActionResult<Movie>> Update([FromQuery] int id, [FromBody] UpdateRequest request)
+        public override async Task<ActionResult<Movie>> GetById([FromQuery] int id)
         {
-            var movie = await _repository.Update(id, request);
-            return Ok(movie);
+
+            try
+            {
+                var events = await _queryService.GetById(id);
+                return Ok(events);
+            }
+            catch (ItemDoesNotExist ex)
+            {
+                return NotFound(ex.Message);
+            }
+
         }
 
-        [HttpDelete("/deleteById")]
-        public async Task<ActionResult<Movie>> DeleteCarById([FromQuery] int id)
+        public override async Task<ActionResult<Movie>> CreateMovie(CreateRequest request)
         {
-            var movie = await _repository.DeleteById(id);
-            return Ok(movie);
+            try
+            {
+                var events = await _commandService.Create(request);
+                return Ok(events);
+            }
+            catch (InvalidDate ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public override async Task<ActionResult<Movie>> UpdateMovie([FromQuery] int id, UpdateRequest request)
+        {
+            try
+            {
+                var events = await _commandService.Update(id, request);
+                return Ok(events);
+            }
+            catch (InvalidDate ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ItemDoesNotExist ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        public override async Task<ActionResult<Movie>> DeleteMovie([FromQuery] int id)
+        {
+            try
+            {
+                var events = await _commandService.Delete(id);
+                return Ok(events);
+            }
+            catch (ItemDoesNotExist ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
 

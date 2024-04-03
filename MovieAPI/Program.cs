@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MovieAPI.Data;
 using MovieAPI.Repository;
 using MovieAPI.Repository.interfaces;
+using MovieAPI.Service;
+using MovieAPI.Service.interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRepository, RepositoryMovie>();
+builder.Services.AddScoped<ICommandService,CommandService>();
+builder.Services.AddScoped<IQueryService, QueryService>();
 
 builder.Services.AddDbContext<AppDbContext>(option => option.UseMySql(builder.Configuration.GetConnectionString("Default")!,
     new MySqlServerVersion(new Version(8, 0, 6))));
