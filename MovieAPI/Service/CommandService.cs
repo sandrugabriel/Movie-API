@@ -58,7 +58,7 @@ namespace MovieAPI.Service
             {
                 throw new ItemDoesNotExist(Constants.Constants.ItemDoesNotExist);
             }
-             await _repository.DeleteById(id);
+            movie = await _repository.DeleteById(id);
             return movie;
         }
     }
