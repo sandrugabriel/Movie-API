@@ -42,7 +42,7 @@ namespace MovieAPI.Service
             }
 
 
-            if (movie.date <= 1000)
+            if (request.Date <= 1000)
             {
                 throw new InvalidDate(Constants.Constants.InvalidDate);
             }

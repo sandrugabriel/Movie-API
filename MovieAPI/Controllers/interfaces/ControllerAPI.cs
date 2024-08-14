@@ -7,38 +7,38 @@ using MovieAPI.Models;
 namespace MovieAPI.Controllers.interfaces
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/[controller]/")]
     public abstract class ControllerAPI : ControllerBase
     {
 
 
-        [HttpGet("/all")]
+        [HttpGet("All")]
         [ProducesResponseType(statusCode: 200, type: typeof(List<Movie>))]
         [ProducesResponseType(statusCode: 400, type: typeof(String))]
         public abstract Task<ActionResult<List<Movie>>> GetAll();
 
-        [HttpGet("/findById")]
+        [HttpGet("FindById")]
         [ProducesResponseType(statusCode: 200, type: typeof(Movie))]
         [ProducesResponseType(statusCode: 400, type: typeof(String))]
         public abstract Task<ActionResult<Movie>> GetById([FromQuery] int id);
 
-        [HttpGet("/findByName")]
+        [HttpGet("FindByName")]
         [ProducesResponseType(statusCode: 200, type: typeof(Movie))]
         [ProducesResponseType(statusCode: 400, type: typeof(String))]
         public abstract Task<ActionResult<Movie>> GetByName([FromQuery] string name);
 
-        [HttpPost("/createMovie")]
+        [HttpPost("CreateMovie")]
         [ProducesResponseType(statusCode: 201, type: typeof(Movie))]
         [ProducesResponseType(statusCode: 400, type: typeof(String))]
         public abstract Task<ActionResult<Movie>> CreateMovie(CreateRequest request);
 
-        [HttpPut("/updateMovie")]
+        [HttpPut("UpdateMovie")]
         [ProducesResponseType(statusCode: 200, type: typeof(Movie))]
         [ProducesResponseType(statusCode: 400, type: typeof(String))]
         [ProducesResponseType(statusCode: 404, type: typeof(String))]
         public abstract Task<ActionResult<Movie>> UpdateMovie([FromQuery] int id, UpdateRequest request);
 
-        [HttpDelete("/deleteMovie")]
+        [HttpDelete("DeleteMovie")]
         [ProducesResponseType(statusCode: 200, type: typeof(Movie))]
         [ProducesResponseType(statusCode: 404, type: typeof(String))]
         public abstract Task<ActionResult<Movie>> DeleteMovie([FromQuery] int id);
